@@ -6,7 +6,7 @@ import {
   Instagram,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Footer: React.FC = () => {
   const socialLinks = [
@@ -46,10 +46,12 @@ const Footer: React.FC = () => {
   const navigate = useNavigate();
 
   const quickLinks = [
+    { label: "Home", href: "/" },
     { label: "About", href: "/about" },
     { label: "Projects", href: "/projects" },
     { label: "Certifications", href: "/certifications" },
     { label: "Events", href: "/events" },
+    { label: "Stats", href: "/stats" },
     { label: "Contact", href: "/contact" },
   ];
 
@@ -140,13 +142,14 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.label}>
-                  <motion.a
-                    onClick={() => navigate(link.href)}
-                    whileHover={{ x: 5 }}
-                    className="text-gray-400 hover:text-cyan-400 transition-colors duration-300 cursor-pointer"
-                  >
-                    {link.label}
-                  </motion.a>
+                  <Link to={link.href}>
+                    <motion.span
+                      whileHover={{ x: 5 }}
+                      className="inline-block text-gray-400 hover:text-cyan-400 transition-colors duration-300 cursor-pointer"
+                    >
+                      {link.label}
+                    </motion.span>
+                  </Link>
                 </li>
               ))}
             </ul>
