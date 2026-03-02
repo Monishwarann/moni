@@ -22,6 +22,8 @@ import bajaImage from "@/assets/baja ce.jpeg";
 import hackathonImage from "@/assets/Hackintym'25 2.0.jpg";
 import symposiumImage from "@/assets/1761585584912.jpg";
 import codingImage from "@/assets/python.jpg";
+import promptOManiaCard from "@/assets/prompt_o_mania card.webp";
+
 import droneImage from "@/assets/Drone workshop.jpeg";
 import maiiyamCard from "@/assets/maiyyam card.png";
 import gbuImage from "@/assets/sairam- GBU.jpeg";
@@ -40,20 +42,6 @@ const EventsPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const events = [
-        {
-            id: 14,
-            title: "Industrial Internship",
-            type: "competition", // Could be experience but let's see available types
-            role: "Internee",
-            date: "2024",
-            location: "Maiiyam Engineering, Chennai",
-            description: "Gained hands-on experience in manufacturing processes and industrial quality standards at a professional engineering firm.",
-            achievement: "Completed",
-            image: maiiyamCard,
-            technologies: ["Manufacturing", "Quality Control", "Industrial Ethics"],
-            featured: false,
-            certificateUrl: maiiyamInternshipPDF,
-        },
         {
             id: 1,
             title: "SAE India H-Baja",
@@ -102,13 +90,13 @@ const EventsPage: React.FC = () => {
             id: 4,
             title: "Prompt-o-Mania",
             type: "competition",
-            role: "Participant",
+            role: "Winner",
             date: "April 2025",
             location: "Meenakshi Sundararajan Engineering College",
             description:
                 "Competitive coding and prompt engineering challenge focusing on Large Language Model optimization and creative output generation.",
-            achievement: "Top 10",
-            image: codingImage,
+            achievement: "Winner",
+            image: promptOManiaCard,
             technologies: ["Prompt Engineering", "NLP", "LLMs"],
             featured: false,
         },
@@ -258,7 +246,7 @@ const EventsPage: React.FC = () => {
     const stats = [
         {
             label: "Events Attended",
-            value: "18+",
+            value: "15+",
             icon: Calendar,
             gradient: "from-cyan-500 to-blue-600",
         },

@@ -8,8 +8,12 @@ import {
     BadgeCheck,
     Rocket,
     NotebookPen,
-    Sparkles,
     Search,
+    Sparkles,
+    Trophy,
+    Briefcase,
+    LayoutGrid,
+    Award,
 } from "lucide-react";
 import SearchBar from "../components/SearchBar";
 import Navbar from "@/components/Navbar";
@@ -38,6 +42,7 @@ import bajaCeImg from "@/assets/baja ce.jpeg";
 import nsdcLogo from "@/assets/nsdc logo.png";
 import maiiyamCard from "@/assets/maiyyam card.png";
 import maiiyamLogo from "@/assets/maiyyam logo.png";
+import promptOManiaCard from "@/assets/prompt_o_mania card.webp";
 
 // PDF Certificates
 import schemaPDF from "@/assets/cerficate/Schema Design Optimization.pdf";
@@ -65,6 +70,7 @@ const CertificationsPage: React.FC = () => {
             image: mongoDBicon,
             verifyUrl: schemaPDF,
             skills: ["MongoDB"],
+            category: "certification",
         },
         {
             id: 2,
@@ -75,6 +81,7 @@ const CertificationsPage: React.FC = () => {
             image: mongoDBicon,
             verifyUrl: relationalPDF,
             skills: ["MongoDB", "NoSQL"],
+            category: "certification",
         },
         {
             id: 3,
@@ -85,6 +92,7 @@ const CertificationsPage: React.FC = () => {
             image: mongoDBicon,
             verifyUrl: mongodbPythonPDF,
             skills: ["MongoDB", "Python"],
+            category: "certification",
         },
         {
             id: 4,
@@ -95,6 +103,7 @@ const CertificationsPage: React.FC = () => {
             image: tatalogo,
             verifyUrl: dataVizPDF,
             skills: ["Data Visualization", "Business Insights", "Data Analysis"],
+            category: "certification",
         },
         {
             id: 5,
@@ -105,6 +114,7 @@ const CertificationsPage: React.FC = () => {
             image: pythonlogo,
             verifyUrl: pythonPDF,
             skills: ["Python", "Programming"],
+            category: "certification",
         },
         {
             id: 6,
@@ -115,6 +125,7 @@ const CertificationsPage: React.FC = () => {
             image: ibmWine,
             verifyUrl: ibmDataSciencePDF,
             skills: ["Python", "Data Science"],
+            category: "certification",
         },
         {
             id: 7,
@@ -125,6 +136,7 @@ const CertificationsPage: React.FC = () => {
             image: ioticon,
             verifyUrl: "https://rfskillingacademy.com/certificate/group/500/236025",
             skills: ["IoT", "Embedded Systems"],
+            category: "certification",
         },
         {
             id: 8,
@@ -135,6 +147,7 @@ const CertificationsPage: React.FC = () => {
             image: techMahindraWine,
             verifyUrl: cyberSecurityPDF,
             skills: ["Cyber Security", "AI Basics"],
+            category: "certification",
         },
         {
             id: 9,
@@ -145,6 +158,7 @@ const CertificationsPage: React.FC = () => {
             image: googleicon,
             verifyUrl: googlePDF,
             skills: ["AI"],
+            category: "certification",
         },
         {
             id: 10,
@@ -155,6 +169,7 @@ const CertificationsPage: React.FC = () => {
             image: upgradlogo,
             verifyUrl: upgradPDF,
             skills: ["Prompt Engineering", "AI"],
+            category: "certification",
         },
         {
             id: 11,
@@ -165,6 +180,7 @@ const CertificationsPage: React.FC = () => {
             image: delogo,
             verifyUrl: frontendPDF,
             skills: ["HTML", "CSS", "JavaScript"],
+            category: "certification",
         },
         {
             id: 13,
@@ -175,6 +191,7 @@ const CertificationsPage: React.FC = () => {
             image: innoverseLogo,
             verifyUrl: innoverseLogo,
             skills: ["IOT", "Hardware Integration", "Prototyping"],
+            category: "hackathon",
         },
         {
             id: 14,
@@ -185,6 +202,7 @@ const CertificationsPage: React.FC = () => {
             image: brainstormLogo,
             verifyUrl: brainstormLogo,
             skills: ["Product Development", "Design Thinking", "Innovation"],
+            category: "hackathon",
         },
         {
             id: 15,
@@ -195,6 +213,7 @@ const CertificationsPage: React.FC = () => {
             image: codeNexusLogo,
             verifyUrl: codeNexusLogo,
             skills: ["IT", "Software Development", "Problem Solving"],
+            category: "hackathon",
         },
         {
             id: 19,
@@ -205,6 +224,7 @@ const CertificationsPage: React.FC = () => {
             image: maiiyamCard,
             verifyUrl: maiiyamInternshipPDF,
             skills: ["Industrial Exposure", "Mechanical Engineering", "Manufacturing"],
+            category: "internship",
         },
         {
             id: 20,
@@ -215,6 +235,7 @@ const CertificationsPage: React.FC = () => {
             image: droneWorkshopImg,
             verifyUrl: droneWorkshopImg,
             skills: ["Drones", "Control Systems", "Flight Mechanics"],
+            category: "workshop",
         },
 
     ];
@@ -224,15 +245,25 @@ const CertificationsPage: React.FC = () => {
     >(null);
     const [showModal, setShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("all");
+
+    const categories = [
+        { id: "all", label: "All Items", icon: LayoutGrid },
+        { id: "certification", label: "Certifications", icon: Award },
+        { id: "internship", label: "Internships", icon: Briefcase },
+        { id: "hackathon", label: "Hackathons", icon: Trophy },
+        { id: "workshop", label: "Workshops", icon: GraduationCap },
+    ];
 
     const filteredCertifications = certifications.filter((cert) => {
+        const matchesCategory = selectedCategory === "all" || cert.category === selectedCategory;
         const matchesSearch =
             cert.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             cert.issuer.toLowerCase().includes(searchTerm.toLowerCase()) ||
             cert.skills.some((skill) =>
                 skill.toLowerCase().includes(searchTerm.toLowerCase()),
             );
-        return matchesSearch;
+        return matchesCategory && matchesSearch;
     });
 
     const openModal = (cert: (typeof certifications)[0]) => {
@@ -326,6 +357,25 @@ const CertificationsPage: React.FC = () => {
                             placeholder="Search by title, issuer, or skill..."
                             scrollTargetId="certifications-grid"
                         />
+                    </div>
+
+                    {/* Category Filter */}
+                    <div className="flex flex-wrap justify-center gap-3 mb-12">
+                        {categories.map((category) => (
+                            <motion.button
+                                key={category.id}
+                                whileHover={{ scale: 1.05, y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setSelectedCategory(category.id)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold tracking-widest uppercase transition-all duration-300 ${selectedCategory === category.id
+                                    ? "bg-gradient-to-r from-cyan-600 via-violet-600 to-purple-600 text-white shadow-lg shadow-cyan-500/25"
+                                    : "bg-gray-800/60 text-gray-400 hover:text-cyan-300 hover:bg-gray-700/60 border border-gray-700/50 hover:border-cyan-500/30"
+                                    }`}
+                            >
+                                <category.icon size={14} />
+                                {category.label}
+                            </motion.button>
+                        ))}
                     </div>
 
                     {/* GRID */}

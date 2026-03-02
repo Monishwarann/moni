@@ -11,10 +11,11 @@ import techlogo from "@/assets/tech.jpg";
 import delogo from "@/assets/6 Ways To Start Programming - EMR Industry.jpg";
 import tatalogo from "@/assets/Tata Motors Logo Meaning and History [Tata Motors symbol].jpg";
 
+
 const certificates = [
   {
     title: "Schema Design Optimization",
-    issuer: "MongoDB",
+   issuer: "MongoDB",
     date: "2025",
     image: mongoDBicon,
     credentialUrl: "https://learn.mongodb.com/c/jPRqKMxoS32a2xCHBAxH8Q",
