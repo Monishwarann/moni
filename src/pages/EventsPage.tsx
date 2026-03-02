@@ -18,15 +18,14 @@ import SearchBar from "../components/SearchBar";
 import Navbar from "@/components/Navbar";
 
 // Images
-import bajaImage from "@/assets/baja ce.jpeg";
+import bajaCard from "@/assets/baja card.jpeg";
+import gbuCard from "@/assets/GBU card.jpeg";
+import droneWorkshopCard from "@/assets/drone workshop card.png";
 import hackathonImage from "@/assets/Hackintym'25 2.0.jpg";
-import symposiumImage from "@/assets/1761585584912.jpg";
-import codingImage from "@/assets/python.jpg";
 import promptOManiaCard from "@/assets/prompt_o_mania card.webp";
-
+import connectionsAndPaperImage from "@/assets/connections and paper presentation.png";
 import droneImage from "@/assets/Drone workshop.jpeg";
 import maiiyamCard from "@/assets/maiyyam card.png";
-import gbuImage from "@/assets/sairam- GBU.jpeg";
 import innoverseImage from "@/assets/ino.jpeg";
 import brainstormImage from "@/assets/Brainstorm mini hackathon.jpeg";
 import codeNexusImage from "@/assets/Code Nexus.jpeg";
@@ -52,10 +51,10 @@ const EventsPage: React.FC = () => {
             description:
                 "Designing and fabricating an off-road electric vehicle for SAE India H-Baja. Involved in vehicle dynamics and battery thermal management systems.",
             achievement: "TI-Clearance for Final Round",
-            image: bajaImage,
+            image: bajaCard,
             technologies: ["Electric Vehicle", "CAD", "Simulations", "Dynamics"],
             featured: true,
-            certificateUrl: bajaImage,
+            certificateUrl: bajaCard,
         },
         {
             id: 2,
@@ -81,10 +80,10 @@ const EventsPage: React.FC = () => {
             location: "Sri Sai Ram Engineering College",
             description: "Intensive technical coding competition involving 'Guessing' the output and 'Building' optimized logic for complex C-programming challenges.",
             achievement: "Winner",
-            image: gbuImage,
+            image: gbuCard,
             technologies: ["C-Programming", "Logic Building", "Code Optimization"],
             featured: true,
-            certificateUrl: gbuImage,
+            certificateUrl: gbuCard,
         },
         {
             id: 4,
@@ -110,11 +109,11 @@ const EventsPage: React.FC = () => {
             description:
                 "Hands-on workshop on drones, control systems, and flight mechanics. Built and tested quadcopters for stability and data collection.",
             achievement: "Completed",
-            image: droneImage,
+            image: droneWorkshopCard,
             technologies: ["Drones", "Control Systems", "Flight Mechanics"],
             featured: false,
             logo: droneIcon,
-            certificateUrl: droneImage,
+            certificateUrl: droneWorkshopCard,
         },
         {
             id: 6,
@@ -125,7 +124,7 @@ const EventsPage: React.FC = () => {
             location: "VelTech High Tech Dr.Rangarajan Dr.sakunthala Engineering College, Chennai",
             description: "A national level engineering symposium event testing logical reasoning and technical cross-connections.",
             achievement: "Participant",
-            image: symposiumImage,
+            image: connectionsAndPaperImage,
             technologies: ["Logical Reasoning", "Problem Solving"],
             featured: false,
             certificateUrl: connectionsPDF,
@@ -139,7 +138,7 @@ const EventsPage: React.FC = () => {
             location: "VelTech High Tech Dr.Rangarajan Dr.sakunthala Engineering College, Chennai",
             description: "National level symposium event involved in presenting innovative engineering research and solutions.",
             achievement: "Presented",
-            image: symposiumImage,
+            image: connectionsAndPaperImage,
             technologies: ["Research", "Public Speaking"],
             featured: false,
             certificateUrl: paperPresentationPDF,
