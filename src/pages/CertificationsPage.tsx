@@ -366,9 +366,9 @@ const CertificationsPage: React.FC = () => {
                         {[
                             { label: "Certificates", value: certifications.length, icon: BadgeCheck, gradient: "from-cyan-500 to-blue-600" },
                             { label: "Hackathons", value: "5", icon: CircuitBoard, gradient: "from-purple-500 to-pink-600" },
-                            { label: "Internships", value: "2", icon: GraduationCap, gradient: "from-emerald-500 to-teal-600" },
+                            { label: "Internships", value: "1", icon: GraduationCap, gradient: "from-emerald-500 to-teal-600" },
                             { label: "Specializations", value: "3+", icon: NotebookPen, gradient: "from-orange-500 to-red-600" },
-                            { label: "Deployments", value: "5+", icon: Rocket, gradient: "from-violet-500 to-purple-600" },
+                            { label: "Deployments", value: "6+", icon: Rocket, gradient: "from-violet-500 to-purple-600" },
                         ].map((stat, i) => (
                             <motion.div
                                 key={i}
