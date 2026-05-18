@@ -10,11 +10,12 @@ import { Toaster } from "react-hot-toast";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ParticleBackground from '@/components/ParticleBackground';
-import ShockwaveIntro from '@/components/ShockwaveIntro';
+import { IntroAnimation } from '@/components/IntroAnimation';
 import { applyPageSEO } from "./utils/seo";
 import { usePrefetch } from "./hooks/usePrefetch";
 
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+
 const HomePage = lazy(() => import("./pages/HomePage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
@@ -22,6 +23,8 @@ const CertificationsPage = lazy(() => import("./pages/CertificationsPage"));
 const EventsPage = lazy(() => import("./pages/EventsPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const StatsPage = lazy(() => import("./pages/StatsPage"));
+
+
 
 function AppContent(): JSX.Element {
   const location = useLocation();
@@ -45,7 +48,7 @@ function AppContent(): JSX.Element {
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden select-none transition-colors duration-500">
       <AnimatePresence mode="wait">
         {showIntro && (
-          <ShockwaveIntro key="intro-animation" onComplete={markIntroAsShown} />
+          <IntroAnimation key="intro-animation" onComplete={markIntroAsShown} />
         )}
       </AnimatePresence>
 

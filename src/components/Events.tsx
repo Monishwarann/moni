@@ -2,10 +2,92 @@ import { motion, useInView, type Variants, AnimatePresence } from "framer-motion
 import { useRef, useState } from "react";
 import { Calendar, MapPin, Trophy, ExternalLink, X, Award } from "lucide-react";
 
-import { events: allEvents } from "@/data/events";
+// Images
+import bajaImage from "@/assets/baja-e.jpg";
+import hackathonImage from "@/assets/Hackintym'25 2.0.jpg";
+import symposiumImage from "@/assets/1761585584912.jpg";
+import codingImage from "@/assets/python.jpg";
+import droneImage from "@/assets/The future of IoT is at the edge! ️ Dive into….jpg";
 
-// Filter only featured events for the summary section
-const events = allEvents.filter(e => e.featured || [1, 2, 3, 4, 5, 10].includes(e.id));
+// Certificates
+import bajaCertificate from "@/assets/baja ce.jpeg";
+import gbuCertificate from "@/assets/sairam- GBU.jpeg";
+import droneCertificate from "@/assets/Drone workshop.jpeg";
+import atvcCertificate from "@/assets/cerficate/atvc.pdf";
+
+// ---------------- EVENTS DATA ----------------
+const events = [
+  {
+    title: "ATVC Hydrogen Baja",
+    type: "National Competition",
+    date: "2025",
+    location: "India",
+    description:
+      "Advanced Technology Vehicle Challenge focusing on hydrogen-powered Baja vehicles and sustainable mobility.",
+    achievement: "Participant",
+    icon: "🧪",
+    image: bajaImage,
+    certificate: atvcCertificate,
+  },
+  {
+    title: "SAE India H-Baja",
+    type: "National Competition",
+    date: "2025 - Present",
+    location: "India",
+    description:
+      "Designing and fabricating an off-road electric vehicle for SAE India H-Baja.",
+    achievement: "TI-Clearance for Final Round",
+    icon: "🚗",
+    image: bajaImage,
+    certificate: bajaCertificate,
+  },
+  {
+    title: "Hackintym'25 2.0",
+    type: "Hackathon",
+    date: "October 2025",
+    location: "Chennai, India",
+    description:
+      "Participated in a national-level hackathon solving real-world engineering problems.",
+    achievement: "Top 10 Finalist",
+    icon: "💡",
+    image: hackathonImage,
+  },
+  {
+    title: "Guess Build Unlock",
+    type: "Symposium",
+    date: "October 2025",
+    location: "Sri Sai Ram Engineering College",
+    description:
+      "Innovation-focused symposium encouraging creative engineering solutions.",
+    achievement: "Winner",
+    icon: "🏆",
+    image: symposiumImage,
+    certificate: gbuCertificate,
+  },
+  {
+    title: "Prompt-o-Mania",
+    type: "Coding Competition",
+    date: "April 2025",
+    location: "Meenakshi Sundararajan Engineering College",
+    description:
+      "Competitive coding and prompt engineering challenge.",
+    achievement: "Top 10",
+    icon: "💻",
+    image: codingImage,
+  },
+  {
+    title: "Drone Workshop",
+    type: "Workshop",
+    date: "April 2025",
+    location: "Meenakshi Sundararajan Engineering College",
+    description:
+      "Hands-on workshop on drones, control systems, and flight mechanics.",
+    achievement: "Completed",
+    icon: "🚁",
+    image: droneImage,
+    certificate: droneCertificate,
+  },
+];
 
 // ---------------- ANIMATIONS ----------------
 const containerVariants: Variants = {

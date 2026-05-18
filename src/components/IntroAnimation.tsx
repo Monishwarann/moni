@@ -1,186 +1,333 @@
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
 
-export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
-  const [progress, setProgress] = useState(0);
-  const [isFinishing, setIsFinishing] = useState(false);
+const GLITCH_CHARS = "!<>-_\\/[]{}—=+*^?#01";
+const NAME = "MONISHWARAN K";
+const TAGLINE = "PORTFOLIO v3.0 — SYSTEMS ONLINE";
+
+function useGlitchText(target: string, startDelay = 400) {
+  const [display, setDisplay] = useState(() => Array(target.length).fill("_").join(""));
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
-    const progressInterval = setInterval(() => {
-      setProgress(prev => {
-        if (prev < 100) {
-          const increment = prev < 30 ? 0.8 : prev < 80 ? 1.5 : 0.5;
-          return Math.min(prev + increment, 100);
-        }
-        return 100;
-      });
-    }, 20);
+    let frame = 0;
+    let raf: number;
+    const revealed = Array(target.length).fill(false);
 
-    const timer = setTimeout(() => {
-      setIsFinishing(true);
-      setTimeout(onComplete, 600);
-    }, 2800);
+    const totalFrames = 55;
+
+    const animate = () => {
+      frame++;
+      const result = target.split("").map((char, i) => {
+        if (char === " ") return " ";
+        if (revealed[i]) return char;
+        if (frame > (i / target.length) * totalFrames * 0.8) {
+          if (Math.random() < 0.3) {
+            revealed[i] = true;
+            return char;
+          }
+        }
+        return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+      });
+
+      setDisplay(result.join(""));
+
+      if (revealed.every(Boolean)) {
+        setDone(true);
+        setDisplay(target);
+        return;
+      }
+      raf = requestAnimationFrame(animate);
+    };
+
+    const timeout = setTimeout(() => {
+      raf = requestAnimationFrame(animate);
+    }, startDelay);
 
     return () => {
-      clearInterval(progressInterval);
-      clearTimeout(timer);
+      clearTimeout(timeout);
+      cancelAnimationFrame(raf);
     };
+  }, [target, startDelay]);
+
+  return { display, done };
+}
+
+// Deterministic positions to avoid hydration issues
+const PARTICLE_CONFIG = Array.from({ length: 40 }, (_, i) => ({
+  top: ((i * 37 + 13) % 97) + 1.5,
+  left: ((i * 61 + 7) % 97) + 1.5,
+  duration: 2 + (i % 4) * 0.6,
+  delay: (i % 10) * 0.4,
+  size: i % 3 === 0 ? 1.5 : i % 5 === 0 ? 2.5 : 1,
+  color: i % 4 === 0 ? 'rgba(0,229,255,0.6)' : i % 3 === 0 ? 'rgba(139,92,246,0.5)' : 'rgba(255,255,255,0.25)',
+}));
+
+export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
+  const [phase, setPhase] = useState<'loading' | 'reveal' | 'exit'>('loading');
+  const [progress, setProgress] = useState(0);
+  const [showCurtain, setShowCurtain] = useState(false);
+  const nameControls = useAnimationControls();
+  const { display: glitchName, done: nameDone } = useGlitchText(NAME, 600);
+
+  // Progress bar
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        const speed = prev < 40 ? 1.8 : prev < 75 ? 2.5 : prev < 95 ? 0.8 : 0.3;
+        return Math.min(prev + speed, 100);
+      });
+    }, 25);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Phase transitions
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase('reveal'), 700);
+    const t2 = setTimeout(() => {
+      setPhase('exit');
+      setShowCurtain(true);
+      setTimeout(onComplete, 900);
+    }, 3400);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [onComplete]);
 
-  const text = "Welcome to My Portfolio";
-  const words = text.split(" ");
+  // Pulse the name when glitch is done
+  useEffect(() => {
+    if (nameDone) {
+      nameControls.start({
+        textShadow: [
+          '0 0 8px rgba(0,229,255,0)',
+          '0 0 24px rgba(0,229,255,0.9), 0 0 60px rgba(139,92,246,0.5)',
+          '0 0 12px rgba(0,229,255,0.4)',
+        ],
+        transition: { duration: 0.8, ease: 'easeOut' },
+      });
+    }
+  }, [nameDone, nameControls]);
+
+  const statusLabel =
+    progress < 35 ? "INITIALIZING CORE MODULES..." :
+    progress < 65 ? "SYNCING GITHUB REPOSITORY..." :
+    progress < 88 ? "DEPLOYING ASSETS..." :
+    "ALL SYSTEMS ONLINE ✓";
 
   return (
-    <motion.div
-      className="fixed inset-0 z-[9999] bg-[#030303] flex items-center justify-center overflow-hidden"
-      initial={{ opacity: 1 }}
-      animate={{ opacity: isFinishing ? 0 : 1 }}
-      transition={{ duration: 0.8 }}
-    >
-      {/* Background Effects */}
-      <div className="absolute inset-0 z-0">
-        {/* Subtle Grain */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay">
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat" />
-        </div>
-
-        {/* Elegant Radial Glows */}
+    <AnimatePresence>
+      {!showCurtain ? (
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px]"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        />
-
-        {/* Moving Spotlight */}
-        <motion.div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,229,255,0.05)_0%,transparent_50%)]"
-          animate={{
-            background: [
-              "radial-gradient(circle_at_30% 30%,rgba(0,229,255,0.05) 0%,transparent_50%)",
-              "radial-gradient(circle_at_70% 70%,rgba(0,229,255,0.05) 0%,transparent_50%)",
-              "radial-gradient(circle_at_30% 30%,rgba(0,229,255,0.05) 0%,transparent_50%)",
-            ]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-        />
-      </div>
-
-      {/* Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {Array.from({ length: 20 }).map((_, i) => (
+          key="intro"
+          className="fixed inset-0 z-[9999] bg-[#020209] flex items-center justify-center overflow-hidden"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {/* ── Ambient Glows ── */}
           <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-primary/20 rounded-full"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -100],
-              opacity: [0, 0.5, 0],
-              scale: [0, 1.5, 0],
-            }}
-            transition={{
-              duration: 2 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: "linear"
-            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
+            style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)' }}
+            animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           />
-        ))}
-      </div>
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none"
+            style={{ background: 'radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%)' }}
+            animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.7, 0.4] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          />
 
-      {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center">
-        {/* Text Container */}
-        <div className="relative py-8 px-12 flex flex-col items-center">
-          <div className="flex flex-wrap justify-center gap-x-4 mb-4">
-            {words.map((word, wordIndex) => (
-              <div key={wordIndex} className="flex overflow-hidden">
-                {word.split("").map((char, charIndex) => (
-                  <motion.span
-                    key={charIndex}
-                    className="text-3xl sm:text-4xl md:text-5xl font-sora font-medium text-white/90 inline-block drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
-                    initial={{ y: 80, opacity: 0, scale: 0.8, filter: "blur(10px)" }}
-                    animate={{ y: 0, opacity: 1, scale: 1, filter: "blur(0px)" }}
-                    transition={{
-                      delay: (wordIndex * 0.2) + (charIndex * 0.05),
-                      duration: 0.8,
-                      ease: [0.2, 1, 0.3, 1]
-                    }}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </div>
+          {/* ── Orbital Rings ── */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            {[380, 500, 640].map((size, i) => (
+              <motion.div
+                key={size}
+                className="absolute rounded-full"
+                style={{
+                  width: size, height: size,
+                  border: `1px solid rgba(${i % 2 === 0 ? '0,229,255' : '139,92,246'},${0.08 - i * 0.015})`,
+                }}
+                animate={{ rotate: i % 2 === 0 ? 360 : -360 }}
+                transition={{ duration: 30 + i * 12, repeat: Infinity, ease: 'linear' }}
+              />
+            ))}
+            {/* Dashed orbit */}
+            <motion.div
+              className="absolute rounded-full"
+              style={{ width: 460, height: 460, border: '1px dashed rgba(0,229,255,0.06)' }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
+            />
+            {/* Orbiting dot */}
+            <motion.div
+              className="absolute"
+              style={{ width: 460, height: 460 }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+            >
+              <div
+                className="absolute -top-[3px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full"
+                style={{ background: 'rgba(0,229,255,0.9)', boxShadow: '0 0 8px 2px rgba(0,229,255,0.6)' }}
+              />
+            </motion.div>
+          </div>
+
+          {/* ── Floating Particles ── */}
+          <div className="absolute inset-0 pointer-events-none">
+            {PARTICLE_CONFIG.map((p, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-full"
+                style={{
+                  top: `${p.top}%`, left: `${p.left}%`,
+                  width: p.size, height: p.size,
+                  background: p.color,
+                }}
+                animate={{ y: [0, -80, 0], opacity: [0, 0.8, 0], scale: [0, 1.5, 0] }}
+                transition={{ duration: p.duration, repeat: Infinity, delay: p.delay, ease: 'easeInOut' }}
+              />
             ))}
           </div>
 
-          {/* Underline/Progress Container */}
-          <div className="relative w-48 sm:w-64 h-[2px] bg-white/5 rounded-full overflow-hidden mb-4">
+          {/* ── HUD Corner Brackets ── */}
+          {(['tl', 'tr', 'bl', 'br'] as const).map(pos => (
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent"
-              initial={{ x: "-100%" }}
-              animate={{ x: `${progress - 100}%` }}
-              transition={{ type: "spring", damping: 20, stiffness: 50 }}
-            />
-          </div>
+              key={pos}
+              className={`absolute w-10 h-10 ${pos.includes('t') ? 'top-8' : 'bottom-8'} ${pos.includes('l') ? 'left-8' : 'right-8'}`}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <div
+                className={`absolute w-full h-full`}
+                style={{
+                  borderTop: pos.includes('t') ? '1.5px solid rgba(0,229,255,0.35)' : 'none',
+                  borderBottom: pos.includes('b') ? '1.5px solid rgba(0,229,255,0.35)' : 'none',
+                  borderLeft: pos.includes('l') ? '1.5px solid rgba(0,229,255,0.35)' : 'none',
+                  borderRight: pos.includes('r') ? '1.5px solid rgba(0,229,255,0.35)' : 'none',
+                }}
+              />
+            </motion.div>
+          ))}
 
-          {/* Status Text */}
+          {/* ── Scanline ── */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="flex flex-col items-center gap-2"
-          >
-            <span className="text-[10px] tracking-[0.4em] font-inter uppercase text-primary/60 font-semibold">
-              Personal Portfolio v2.0
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-[9px] font-mono text-white/40">
-                {progress < 40 ? "INITIALIZING SYSTEMS..." :
-                  progress < 70 ? "SYNCING GITHUB CORE..." :
-                    progress < 90 ? "VERCEL DEPLOYMENT READY..." : "SYSTEMS ONLINE"}
-              </span>
-              <span className="text-[9px] font-mono text-primary/80">
-                {Math.floor(progress)}%
-              </span>
+            className="absolute inset-x-0 h-[1px] pointer-events-none"
+            style={{ background: 'linear-gradient(90deg, transparent, rgba(0,229,255,0.4), transparent)' }}
+            animate={{ top: ['0%', '100%', '0%'] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+          />
+
+          {/* ── Main Content ── */}
+          <div className="relative z-10 flex flex-col items-center gap-6 px-8 text-center">
+
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -16 }}
+              animate={{ opacity: phase !== 'loading' ? 1 : 0, y: phase !== 'loading' ? 0 : -16 }}
+              transition={{ duration: 0.6 }}
+              className="flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-mono font-bold tracking-[0.35em] uppercase"
+              style={{
+                border: '1px solid rgba(0,229,255,0.25)',
+                background: 'rgba(0,229,255,0.05)',
+                color: 'rgba(0,229,255,0.8)',
+              }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+              Full-Stack &amp; Mechanical Engineer
+            </motion.div>
+
+            {/* Glitch Name */}
+            <motion.h1
+              animate={nameControls}
+              className="font-sora font-black tracking-tighter leading-none select-none"
+              style={{
+                fontSize: 'clamp(2.4rem, 8vw, 5.5rem)',
+                background: 'linear-gradient(135deg, #fff 30%, rgba(0,229,255,0.8) 65%, rgba(139,92,246,0.9) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontVariantNumeric: 'tabular-nums',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {phase === 'loading' ? '\u00A0' : glitchName}
+            </motion.h1>
+
+            {/* Tagline */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: nameDone ? 1 : 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-[10px] font-mono tracking-[0.5em] uppercase"
+              style={{ color: 'rgba(139,92,246,0.7)' }}
+            >
+              {TAGLINE}
+            </motion.p>
+
+            {/* Progress bar */}
+            <div className="w-64 sm:w-80 flex flex-col items-center gap-2 mt-2">
+              <div
+                className="relative w-full h-[2px] overflow-hidden rounded-full"
+                style={{ background: 'rgba(255,255,255,0.06)' }}
+              >
+                <motion.div
+                  className="absolute inset-y-0 left-0 rounded-full"
+                  style={{
+                    background: 'linear-gradient(90deg, rgba(139,92,246,0.9), rgba(0,229,255,1))',
+                    boxShadow: '0 0 12px rgba(0,229,255,0.8)',
+                  }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ ease: 'linear', duration: 0.1 }}
+                />
+                {/* Shimmer */}
+                <motion.div
+                  className="absolute inset-y-0 w-16 rounded-full"
+                  style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)' }}
+                  animate={{ left: ['-10%', '110%'] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+                />
+              </div>
+
+              {/* Status */}
+              <div className="flex items-center justify-between w-full">
+                <motion.span
+                  key={statusLabel}
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-[9px] font-mono tracking-widest uppercase"
+                  style={{ color: 'rgba(255,255,255,0.35)' }}
+                >
+                  {statusLabel}
+                </motion.span>
+                <span
+                  className="text-[10px] font-mono font-bold tabular-nums"
+                  style={{ color: 'rgba(0,229,255,0.85)' }}
+                >
+                  {Math.floor(progress).toString().padStart(3, '0')}%
+                </span>
+              </div>
             </div>
-          </motion.div>
-        </div>
-
-        {/* Decorative Rings */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 pointer-events-none">
+          </div>
+        </motion.div>
+      ) : (
+        /* ── Curtain-split Exit ── */
+        <motion.div key="curtain" className="fixed inset-0 z-[9999] pointer-events-none flex flex-col">
           <motion.div
-            className="w-[300px] h-[300px] border border-primary/10 rounded-full"
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1.5, opacity: [0, 0.4, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
+            className="flex-1 w-full"
+            style={{ background: '#020209' }}
+            initial={{ scaleY: 1, transformOrigin: 'top' }}
+            animate={{ scaleY: 0 }}
+            transition={{ duration: 0.75, ease: [0.76, 0, 0.24, 1] }}
           />
           <motion.div
-            className="w-[300px] h-[300px] border border-primary/5 rounded-full"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 2, opacity: [0, 0.2, 0] }}
-            transition={{ duration: 4, repeat: Infinity, delay: 1, ease: "easeOut" }}
+            className="flex-1 w-full"
+            style={{ background: '#020209' }}
+            initial={{ scaleY: 1, transformOrigin: 'bottom' }}
+            animate={{ scaleY: 0 }}
+            transition={{ duration: 0.75, ease: [0.76, 0, 0.24, 1] }}
           />
-        </div>
-      </div>
-
-      {/* Finishing Flash */}
-      <AnimatePresence>
-        {isFinishing && (
-          <motion.div
-            className="absolute inset-0 bg-white z-[10000]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }}
-          />
-        )}
-      </AnimatePresence>
-    </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

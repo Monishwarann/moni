@@ -14,6 +14,7 @@ import {
     Briefcase,
     LayoutGrid,
     Award,
+    BookOpen,
 } from "lucide-react";
 import SearchBar from "../components/SearchBar";
 import Navbar from "@/components/Navbar";
@@ -21,7 +22,7 @@ import Navbar from "@/components/Navbar";
 // Premium Assets
 import mongoDBicon from "@/assets/mongodb.jpg";
 import googleicon from "@/assets/google.jpg";
-import pythonlogo from "@/assets/python.jpg";
+import pythonlogo from "@/assets/ec51b026341cc2bdf0d7170a36da010f.png";
 import ioticon from "@/assets/The future of IoT is at the edge! ️ Dive into….jpg";
 import upgradlogo from "@/assets/upgrad.jpg";
 import techlogo from "@/assets/tech.jpg";
@@ -29,7 +30,7 @@ import techMahindraWine from "@/assets/Tech_Mahindra-Logo.wine.png";
 import ibmWine from "@/assets/IBM-Logo.wine.png";
 import awsWine from "@/assets/Amazon_Web_Services-Logo.wine.png";
 import delogo from "@/assets/6 Ways To Start Programming - EMR Industry.jpg";
-import tatalogo from "@/assets/Tata Motors Logo Meaning and History [Tata Motors symbol].jpg";
+import tatalogo from "@/assets/tata-football-vector-logo-free-download-11574027723ejkwoxvxgq.png";
 import innoverseLogo from "@/assets/ino.jpeg";
 import brainstormLogo from "@/assets/Brainstorm mini hackathon.jpeg";
 import codeNexusLogo from "@/assets/Code Nexus.jpeg";
@@ -60,6 +61,9 @@ import paperPresentationPDF from "@/assets/cerficate/certificate- paper Presenta
 import maiiyamInternshipPDF from "@/assets/cerficate/internship certificate- maiiyam.pdf";
 import soarCard from "@/assets/Soar-Card.png";
 import soarCertificate from "@/assets/Soar-Cerficate.png";
+import nptelLogoCard from "@/assets/nptel-logo card.png";
+import nptelLogo from "@/assets/nptel-logo.png";
+import javaNptelPDF from "@/assets/cerficate/Java (NPTEL).pdf";
 
 const CertificationsPage: React.FC = () => {
     const certifications = [
@@ -250,6 +254,17 @@ const CertificationsPage: React.FC = () => {
             skills: ["AI Awareness", "Embedded Assessment", "Prompt Engineering"],
             category: "certification",
         },
+        {
+            id: 22,
+            title: "Programming in Java",
+            issuer: "NPTEL",
+            date: "2026",
+            logo: nptelLogo,
+            image: nptelLogoCard,
+            verifyUrl: javaNptelPDF,
+            skills: ["Java", "Programming"],
+            category: "course",
+        }
 
     ];
 
@@ -266,6 +281,7 @@ const CertificationsPage: React.FC = () => {
         { id: "internship", label: "Internships", icon: Briefcase },
         { id: "hackathon", label: "Hackathons", icon: Trophy },
         { id: "workshop", label: "Workshops", icon: GraduationCap },
+        { id: "course", label: "Courses", icon: BookOpen },
     ];
 
     const filteredCertifications = certifications.filter((cert) => {
@@ -407,7 +423,11 @@ const CertificationsPage: React.FC = () => {
                                         <img
                                             src={cert.image}
                                             alt={cert.title}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            className={`${
+                                                cert.image === nptelLogoCard
+                                                    ? "w-[85%] h-full mx-auto object-contain py-2"
+                                                    : "w-full h-full object-cover"
+                                            } transition-transform duration-700 group-hover:scale-110`}
                                             onError={(e) => { (e.target as HTMLImageElement).src = 'https://api.dicebear.com/7.x/shapes/svg?seed=' + cert.title }}
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent" />
@@ -487,12 +507,12 @@ const CertificationsPage: React.FC = () => {
                                 </button>
                             </div>
 
-                            <div className="aspect-[4/3] bg-black rounded-xl border border-white/10 relative group overflow-hidden shadow-2xl">
-                                {selectedCert.verifyUrl.endsWith('.pdf') ? (
+                            <div className="h-[55vh] sm:h-[65vh] w-full bg-black rounded-xl border border-white/10 relative group overflow-hidden shadow-2xl">
+                                {selectedCert.verifyUrl.endsWith('.pdf') || (selectedCert.verifyUrl.startsWith('http') && !selectedCert.verifyUrl.match(/\.(png|jpg|jpeg|gif|webp)$/i)) ? (
                                     <iframe
-                                        src={`${selectedCert.verifyUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                                        src={selectedCert.verifyUrl.endsWith('.pdf') ? `${selectedCert.verifyUrl}#view=FitH&toolbar=0&navpanes=0&scrollbar=0` : selectedCert.verifyUrl}
                                         className="w-full h-full border-none"
-                                        title="Certificate PDF"
+                                        title="Certificate Document"
                                     />
                                 ) : (
                                     <img
