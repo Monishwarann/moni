@@ -76,7 +76,7 @@ const CertificationsPage: React.FC = () => {
             image: mongoDBicon,
             verifyUrl: schemaPDF,
             skills: ["MongoDB"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 2,
@@ -87,7 +87,7 @@ const CertificationsPage: React.FC = () => {
             image: mongoDBicon,
             verifyUrl: relationalPDF,
             skills: ["MongoDB", "NoSQL"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 3,
@@ -98,7 +98,7 @@ const CertificationsPage: React.FC = () => {
             image: mongoDBicon,
             verifyUrl: mongodbPythonPDF,
             skills: ["MongoDB", "Python"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 4,
@@ -109,7 +109,7 @@ const CertificationsPage: React.FC = () => {
             image: tatalogo,
             verifyUrl: dataVizPDF,
             skills: ["Data Visualization", "Business Insights", "Data Analysis"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 5,
@@ -120,7 +120,7 @@ const CertificationsPage: React.FC = () => {
             image: pythonlogo,
             verifyUrl: pythonPDF,
             skills: ["Python", "Programming"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 6,
@@ -131,7 +131,7 @@ const CertificationsPage: React.FC = () => {
             image: ibmWine,
             verifyUrl: ibmDataSciencePDF,
             skills: ["Python", "Data Science"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 7,
@@ -142,7 +142,7 @@ const CertificationsPage: React.FC = () => {
             image: ioticon,
             verifyUrl: "https://rfskillingacademy.com/certificate/group/500/236025",
             skills: ["IoT", "Embedded Systems"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 8,
@@ -153,7 +153,7 @@ const CertificationsPage: React.FC = () => {
             image: techMahindraWine,
             verifyUrl: cyberSecurityPDF,
             skills: ["Cyber Security", "AI Basics"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 9,
@@ -164,7 +164,7 @@ const CertificationsPage: React.FC = () => {
             image: googleicon,
             verifyUrl: googlePDF,
             skills: ["AI"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 10,
@@ -175,7 +175,7 @@ const CertificationsPage: React.FC = () => {
             image: upgradlogo,
             verifyUrl: upgradPDF,
             skills: ["Prompt Engineering", "AI"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 11,
@@ -186,7 +186,7 @@ const CertificationsPage: React.FC = () => {
             image: delogo,
             verifyUrl: frontendPDF,
             skills: ["HTML", "CSS", "JavaScript"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 13,
@@ -252,7 +252,7 @@ const CertificationsPage: React.FC = () => {
             image: soarCard,
             verifyUrl: soarCertificate,
             skills: ["AI Awareness", "Embedded Assessment", "Prompt Engineering"],
-            category: "certification",
+            category: ["Certifications", "Courses"]
         },
         {
             id: 22,
@@ -263,7 +263,7 @@ const CertificationsPage: React.FC = () => {
             image: nptelLogoCard,
             verifyUrl: javaNptelPDF,
             skills: ["Java", "Programming"],
-            category: "course",
+            category: ["Certifications", "Courses"]
         }
 
     ];
@@ -277,15 +277,22 @@ const CertificationsPage: React.FC = () => {
 
     const categories = [
         { id: "all", label: "All Items", icon: LayoutGrid },
-        { id: "certification", label: "Certifications", icon: Award },
-        { id: "internship", label: "Internships", icon: Briefcase },
-        { id: "hackathon", label: "Hackathons", icon: Trophy },
-        { id: "workshop", label: "Workshops", icon: GraduationCap },
-        { id: "course", label: "Courses", icon: BookOpen },
+        { id: "Certifications", label: "Certifications", icon: Award },
+        { id: "Internship", label: "Internships", icon: Briefcase },
+        { id: "Hackathon", label: "Hackathons", icon: Trophy },
+        { id: "Workshop", label: "Workshops", icon: GraduationCap },
+        { id: "Course", label: "Courses", icon: BookOpen },
     ];
 
     const filteredCertifications = certifications.filter((cert) => {
-        const matchesCategory = selectedCategory === "all" || cert.category === selectedCategory;
+        const normalize = (cat: string) => cat.toLowerCase().trim().replace(/s$/, '');
+        const normSelected = normalize(selectedCategory);
+        const matchesCategory =
+            selectedCategory === "all" ||
+            (Array.isArray(cert.category)
+                ? cert.category.some((cat) => normalize(cat) === normSelected)
+                : normalize(cert.category) === normSelected);
+
         const matchesSearch =
             cert.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             cert.issuer.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -423,11 +430,10 @@ const CertificationsPage: React.FC = () => {
                                         <img
                                             src={cert.image}
                                             alt={cert.title}
-                                            className={`${
-                                                cert.image === nptelLogoCard
+                                            className={`${cert.image === nptelLogoCard
                                                     ? "w-[85%] h-full mx-auto object-contain py-2"
                                                     : "w-full h-full object-cover"
-                                            } transition-transform duration-700 group-hover:scale-110`}
+                                                } transition-transform duration-700 group-hover:scale-110`}
                                             onError={(e) => { (e.target as HTMLImageElement).src = 'https://api.dicebear.com/7.x/shapes/svg?seed=' + cert.title }}
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent" />
