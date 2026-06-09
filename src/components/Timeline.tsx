@@ -64,8 +64,8 @@ export function Timeline() {
             </div>
 
             <motion.a
-              href={`${import.meta.env.BASE_URL}Monishwaran_K_Resume.pdf`}
-              download="Monishwaran_K_Resume.pdf"
+              href={`${import.meta.env.BASE_URL}Monishwaran_K_Resume.docx`}
+              download="Monishwaran_K_Resume.docx"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}

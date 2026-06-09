@@ -103,7 +103,7 @@ export function Hero() {
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10"
             >
               <motion.a
-                href="/Monishwaran_K_Resume.pdf"
+                href="/Monishwaran_K_Resume.docx"
                 download
                 className="group px-8 py-4 rounded-xl bg-gradient-to-r from-primary to-violet-600 text-white font-bold flex items-center justify-center gap-3 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"
                 whileHover={{ scale: 1.05, y: -2 }}

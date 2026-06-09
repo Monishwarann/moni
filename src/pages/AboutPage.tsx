@@ -96,8 +96,8 @@ const AboutPage = () => {
 
     const handleDownload = () => {
         const link = document.createElement("a");
-        link.href = `${import.meta.env.BASE_URL}Monishwaran_K_Resume.pdf`;
-        link.download = "Monishwaran_K_Resume.pdf";
+        link.href = `${import.meta.env.BASE_URL}Monishwaran_K_Resume.docx`;
+        link.download = "Monishwaran_K_Resume.docx";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -301,7 +301,7 @@ const AboutPage = () => {
                                         <div className="glass-card p-8 pl-12 bg-gray-950/40 border-white/5 group-hover:border-primary/30 transition-all rounded-[32px]">
                                             <h3 className="text-2xl font-bold text-white mb-6 tracking-tight group-hover:text-primary transition-colors">My Journey</h3>
                                             <p className="text-gray-400 leading-relaxed font-light text-base">
-                                                I'm a second-year Mechanical Engineering student at Meenakshi Sundararajan Engineering College, passionate about front-end development and constantly honing my skills as an aspiring React developer. I thrive on turning ideas into interactive web experiences and love exploring the latest in modern UI frameworks.
+                                                I'm a Third-year Mechanical Engineering student at Meenakshi Sundararajan Engineering College, passionate about front-end development and constantly honing my skills as an aspiring React developer. I thrive on turning ideas into interactive web experiences and love exploring the latest in modern UI frameworks.
                                             </p>
                                         </div>
                                     </motion.div>
