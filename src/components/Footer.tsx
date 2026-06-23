@@ -1,12 +1,9 @@
+
 import React from "react";
 import { motion, Variants } from "framer-motion";
-import {
-  Github,
-  Linkedin,
-  Instagram,
-} from "lucide-react";
+import { Github, Linkedin, Instagram } from "lucide-react";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
   const socialLinks = [
@@ -43,16 +40,12 @@ const Footer: React.FC = () => {
     return colors[color] || "#4B5563";
   };
 
-  const navigate = useNavigate();
-
   const quickLinks = [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
+      { label: "About", href: "/about" },
     { label: "Projects", href: "/projects" },
     { label: "Certifications", href: "/certifications" },
     { label: "Events", href: "/events" },
-    { label: "Stats", href: "/stats" },
-    { label: "Contact", href: "/contact" },
+    { label: "Contact", href: "/contact" }
   ];
 
   const containerVariants: Variants = {
@@ -80,32 +73,39 @@ const Footer: React.FC = () => {
   const email = "k.monishwaran123@gmail.com";
 
   return (
-    <footer className="relative overflow-hidden bg-gray-900 border-t z-0 border-gray-800">
+    <footer className="relative overflow-hidden bg-gray-900 border-t border-gray-800 z-0">
+      {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-violet-500/5" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-10">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid md:grid-cols-4 gap-8"
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6"
         >
           {/* Brand Section */}
-          <motion.div variants={itemVariants} className="md:col-span-2">
-            <div className="flex items-center mb-4">
+          <motion.div
+            variants={itemVariants}
+            className="col-span-2 sm:col-span-2"
+          >
+            <div className="flex items-center mb-2 sm:mb-3">
               <img
                 src={`${import.meta.env.BASE_URL}logo.png`}
                 alt="Logo"
                 loading="lazy"
-                className="h-12 w-auto"
+                className="h-8 sm:h-10 md:h-12 w-auto"
               />
             </div>
-            <p className="text-gray-400 mb-6 max-w-md">
-              Aspiring engineer combining mechanical engineering fundamentals with modern front-end technologies,
-              driven to design responsive web interfaces and interactive user experiences.
+
+            <p className="text-gray-400 mb-3 sm:mb-4 max-w-md text-xs sm:text-sm md:text-base">
+              Aspiring engineer combining mechanical engineering fundamentals
+              with modern front-end technologies, driven to design responsive
+              web interfaces and interactive user experiences.
             </p>
-            <div className="flex items-center gap-4">
+
+            <div className="flex items-center gap-2 sm:gap-3">
               {socialLinks.map((social) => (
                 <motion.div
                   key={social.label}
@@ -115,17 +115,19 @@ const Footer: React.FC = () => {
                 >
                   <motion.div
                     onClick={() => window.open(social.href, "_blank")}
-                    className={`w-10 h-10 bg-gray-800/50 cursor-pointer backdrop-blur-sm border border-gray-700/50 rounded-lg flex items-center justify-center transition-all duration-300`}
+                    className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-gray-800/50 cursor-pointer backdrop-blur-sm border border-gray-700/50 rounded-lg flex items-center justify-center transition-all duration-300"
                   >
                     <social.icon
-                      className={`${social.color} w-5 h-5 transition-colors`}
+                      className={`${social.color} w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 transition-colors`}
                     />
                   </motion.div>
 
                   {/* Tooltip */}
                   <div
-                    style={{ backgroundColor: getTailwindColor(social.bg) }}
-                    className={`absolute -bottom-10 left-1/2 transform -translate-x-1/2 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 whitespace-nowrap`}
+                    style={{
+                      backgroundColor: getTailwindColor(social.bg),
+                    }}
+                    className="absolute -bottom-6 sm:-bottom-8 left-1/2 transform -translate-x-1/2 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 whitespace-nowrap"
                   >
                     {social.label}
                   </div>
@@ -136,16 +138,17 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <motion.div variants={itemVariants}>
-            <h3 className="text-lg font-semibold text-white mb-4">
+            <h3 className="text-xs sm:text-sm md:text-lg font-semibold text-white mb-2 sm:mb-3">
               Quick Links
             </h3>
-            <ul className="space-y-2">
+
+            <ul className="space-y-1">
               {quickLinks.map((link) => (
                 <li key={link.label}>
                   <Link to={link.href}>
                     <motion.span
                       whileHover={{ x: 5 }}
-                      className="inline-block text-gray-400 hover:text-cyan-400 transition-colors duration-300 cursor-pointer"
+                      className="inline-block text-gray-400 hover:text-cyan-400 transition-colors duration-300 cursor-pointer text-xs sm:text-sm"
                     >
                       {link.label}
                     </motion.span>
@@ -155,31 +158,36 @@ const Footer: React.FC = () => {
             </ul>
           </motion.div>
 
-          {/* Contact Info */}
+          {/* Contact Section */}
           <motion.div variants={itemVariants}>
-            <h3 className="text-lg font-semibold text-white mb-4">Contact</h3>
-            <div className="space-y-2 text-gray-400">
-              <p>22/45,Palani Amman Kovil South 3rd Street, Tripicane</p>
+            <h3 className="text-xs sm:text-sm md:text-lg font-semibold text-white mb-2 sm:mb-3">
+              Contact
+            </h3>
+
+            <div className="space-y-1 text-gray-400 text-xs sm:text-sm">
+              <p>22/45, Palani Amman Kovil South 3rd Street, Triplicane</p>
               <p>Chennai - 600005</p>
-              <div className="space-y-2">
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigator.clipboard.writeText(email);
-                    toast.success("Email copied to clipboard!");
-                  }}
-                  className="text-cyan-400 cursor-pointer font-semibold"
-                >
-                  {email}
-                </a>
-              </div>
+
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigator.clipboard.writeText(email);
+                  toast.success("Email copied to clipboard!");
+                }}
+                className="text-cyan-400 cursor-pointer font-semibold block mt-1"
+              >
+                {email}
+              </a>
             </div>
           </motion.div>
         </motion.div>
+
         {/* Copyright */}
-        <div className="mt-10 text-center text-gray-500 text-sm">
-          © {new Date().getFullYear()} Monishwaran K. All rights reserved.
+        <div className="mt-8 pt-6 border-t border-gray-800 text-center">
+          <p className="text-gray-500 text-xs sm:text-sm">
+            © {new Date().getFullYear()} Monishwaran K. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

@@ -9,7 +9,8 @@
     "postbuild": "node -e \"const fs = require('fs'); fs.copyFileSync('dist/index.html', 'dist/404.html');\"",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "push": "git add . && git commit -m \"Auto update\" && git push"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
